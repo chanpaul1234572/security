@@ -1,3 +1,4 @@
+#This py is using for decrypting simple rot encryption
 import sys
 if len(sys.argv) != 2:
     print "usage: python rot.py filename"
