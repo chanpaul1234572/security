@@ -14,3 +14,4 @@ It seems like they wanted every combination of PLT and GOT! This just seems to c
 Those starting with .plt contain stubs to jump to the target, those starting with .got are tables of the target addresses.
 
 ![Header sector](https://github.com/chanpaul1234572/security/blob/master/Capture.PNG)
+![PLT and GOT routine](https://github.com/chanpaul1234572/security/blob/master/PLT_GOT.png)
