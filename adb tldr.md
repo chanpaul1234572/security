@@ -25,7 +25,7 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
 ```
 * **Serial number**: A string created by adb to uniquely identify the device by its port number. (The string in the begining)
 * If you have muilt devices connected, you can use ``` -s ``` to select which device you want to execute commands on. In general: ```adb -s Serial number command```. For example : if you want to launch a shell on a device with serial number **FA67TBN01874**, then you can type: ```adb -s FA67TBN01874 shell```.
-
+* 
 #### Installation
 ```adb install [Options] path_to_apk```
 - To install a apk to the device
@@ -38,15 +38,21 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
     * **-f**: Install package on the internal system memory.
     * **-d**: Allow version code downgrade.
     * **-g**: Grant all permissions listed in the app manifest.
+
+```adb install-multiple [Options] path_to_apk1 path_to_apk2```
+- To install multiple APKs.
 #### Uninstallation
-```adb uninstall [Options] package```
+```adb uninstall [Options] package```
 - Removes a package from the system
 * Options:
     * **-k** : Keep the data and cache directories around after package removal.
+
 * Reminder: The package name id can be found in google play website using a web browser, the package name will be listed at the end of the URL after the **?id=** . For example: searching for **busybox** apps, the **url** is ```https://play.google.com/store/apps/details?id=stericson.busybox```, so the package name is **stericson.busybox**. Actually, there is a more **easy** way to find the package name, and I will disscue later.
-#### Socket connection forwarding
+#### Socket connection forwarding/reversing
+* To map an android device port to a computer port is called forwarding
+* To map a computer port ot an android device port is called reversing
 ```adb [--no-rebind] Local remote``` 
-- To set up a forward socket connection, replace local and remote with tcp:(ports), For example: 
+- To set up a forward socket connection, replace local and remote with tcp:(port), For example: 
 
 - ```adb forward tcp:port_number_of_the_host tcp:port_number_of_the_device```
     - To set up forwarding of host **port port_number_of_the_host** tcp to device port **port_number_of_the_device** . 
@@ -60,18 +66,96 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
 
 ```adb forward --list```
 - list all forward socket connections
+
+```adb reverse -l```
+- list all reverse socket connections
+
+```adb reverse [--no-rebind] remote local```
+- To set up reversing socket connection, replace local and remote with tcp:(port).
+    - To choose any open port, make the remote value tcp:0.
+```adb reverse --remove remote```
+- To remove specific reversing
+
+```adb reverse --remove-all```
+- To remove all reversing
+
+#### To run as package owner
+```run-as package_name```
+- Run commands on a device as an app (specified using package_name).
+- For example: To read a package data:
+```
+over@over-ThinkPad-R52:~$ adb shell
+$ run-as com.package
+$ cd /data/data/com.package
+$ ls
+databases
+lib
+$ cd databases
+$ ls
+preferences.db
+$ cat preferences.db > /mnt/sdcard/preferences1.db 
+```
+- Of course you need to change the "com.package" to specific package id.
+- And Also
+```
+adb shell run-as <PACKAGE_NAME> ls <DIR>
+adb shell run-as <PACKAGE_NAME> cat <FILE>
+```
+- Reminder:
+    - /data/data/com.packagename/lib can access without run-as
+    - "android:debuggable="false"" will ignore **run-as**
+
+#### Backup and restore
+
+```adb backup [-f file] [-apk | -noapk] [-obb | -noobb] [-shared | -noshared] [-all] [-system | [-nosystem] package_names```
+- Write an archive of the device's data to file. If you do not specify a file name, the default file is backup.adb. The package list is optional when you specify the -all and -shared options. The following describes the usages for the other options:
+    - apk | -noapk: Back up or do not back up .apk files. The default value is -noapk.
+    - obb | -noobb: Back up or do not back up .obb files. The default value is -noobb.
+    - shared | -noshared: Back up or do not back up shared storage. The default value is noshared.
+    - all: Back up all installed apps.
+    - system | -nosystem: Include or do not include system apps when backing up all installed apps (-all). The default value is -system.
+
+```adb restore file```
+- Restore the device contents from file.
+
 #### To copy something from device/host to device/host
 ```adb pull remote local```
 - To copy a file or directory and its sub-directories from the device
 
 ```adb push local remote```
 - To copy a file or directory and its sub-directories to the device
-
-Replace local and remote with the paths to the target files/directory on your development machine (local) and on the device (remote). For example: 
+    - Replace local and remote with the paths to the target files/directory on your development machine (local) and on the device (remote). For example: 
 ```adb push foo.txt /sdcard/foo.txt```
 
+#### Kill and start adb
 ```adb kill-server```
 - To terminate the adb server process
+
+```adb start-server```
+- To start the adb server process.
+
+#### Reboot the devices
+
+```reboot [bootloader | recovery | sideload | sideload-auto-reboot ]```
+
+- Reboot the device. This command defaults to booting the system image, but also supports bootloader and recovery. 
+    - The bootloader option reboots into bootloader.
+    - The recovery option reboots into recovery.
+    - The sideload option reboots into recovery and starts sideload mode.
+    - The sideload-auto-reboot option is the same as sideload, but reboots after side loading completes.
+
+```adb root```
+- Restart adbd with root permissions.
+
+```adb unroot```
+- Restart adbd without root permissions.
+
+#### Reconnection
+```adb reconnect```
+- Force a reconnect from the host.
+
+```reconnect device```
+- Force a reconnect from the device to force a reconnect.
 
 ### Connect over Wifi
 1. Connect your Android device and adb host computer to a common Wi-Fi network accessible to both. Beware that not all access points are suitable; you might need to use an access point whose firewall is configured properly to support adb.
