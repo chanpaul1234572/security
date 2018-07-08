@@ -25,7 +25,7 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
 ```
 * **Serial number**: A string created by adb to uniquely identify the device by its port number. (The string in the begining)
 * If you have muilt devices connected, you can use ``` -s ``` to select which device you want to execute commands on. In general: ```adb -s Serial number command```. For example : if you want to launch a shell on a device with serial number **FA67TBN01874**, then you can type: ```adb -s FA67TBN01874 shell```.
-* 
+
 #### Installation
 ```adb install [Options] path_to_apk```
 - To install a apk to the device
@@ -39,7 +39,7 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
     * **-d**: Allow version code downgrade.
     * **-g**: Grant all permissions listed in the app manifest.
 #### Uninstallation
-```adb uninstall [Options] package```
+```adb uninstall [Options] package```
 - Removes a package from the system
 * Options:
     * **-k** : Keep the data and cache directories around after package removal.
