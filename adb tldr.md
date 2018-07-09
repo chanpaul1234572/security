@@ -1,4 +1,4 @@
-## ADB TLDR
+# ADB TLDR
 ### This note is to record some basic and useful adb commands.
 Android Debug Bridge (adb) is a versatile command-line tool that lets you communicate with a device. The adb command facilitates a variety of device actions, such as installing and debugging apps, and it provides access to a Unix shell that you can use to run a variety of commands on a device. It is a client-server program that includes three components:
 
@@ -8,7 +8,7 @@ Android Debug Bridge (adb) is a versatile command-line tool that lets you commun
 
 **A server**, which manages communication between the client and the daemon. The server runs as a background process on your development machine. (TLDR: The middle man on the computer that tranfers the commands to the daemon)
 
-### Basic
+## Basic
 
 #### check connection
 ```adb devices```
@@ -25,7 +25,7 @@ FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 d
 ```
 * **Serial number**: A string created by adb to uniquely identify the device by its port number. (The string in the begining)
 * If you have muilt devices connected, you can use ``` -s ``` to select which device you want to execute commands on. In general: ```adb -s Serial number command```. For example : if you want to launch a shell on a device with serial number **FA67TBN01874**, then you can type: ```adb -s FA67TBN01874 shell```.
-* 
+* other options: ```-d``` : direct an adb command to the only attached USB device , ```-e``` : Direct an adb command to the only running emulator.
 #### Installation
 ```adb install [Options] path_to_apk```
 - To install a apk to the device
@@ -109,11 +109,11 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
 
 ```adb backup [-f file] [-apk | -noapk] [-obb | -noobb] [-shared | -noshared] [-all] [-system | [-nosystem] package_names```
 - Write an archive of the device's data to file. If you do not specify a file name, the default file is backup.adb. The package list is optional when you specify the -all and -shared options. The following describes the usages for the other options:
-    - apk | -noapk: Back up or do not back up .apk files. The default value is -noapk.
-    - obb | -noobb: Back up or do not back up .obb files. The default value is -noobb.
-    - shared | -noshared: Back up or do not back up shared storage. The default value is noshared.
-    - all: Back up all installed apps.
-    - system | -nosystem: Include or do not include system apps when backing up all installed apps (-all). The default value is -system.
+    - **-apk** | **-noapk**: Back up or do not back up .apk files. The default value is **-noapk**.
+    - **-obb** | **-noobb**: Back up or do not back up .obb files. The default value is **-noobb**.
+    - **-shared** | **-noshared**: Back up or do not back up shared storage. The default value is **-noshared**.
+    - **-all**: Back up all installed apps.
+    - **-system** | **-nosystem**: Include or do not include system apps when backing up all installed apps (**-all**). The default value is **-system**.
 
 ```adb restore file```
 - Restore the device contents from file.
@@ -132,17 +132,20 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
 - To terminate the adb server process
 
 ```adb start-server```
-- To start the adb server process.
+- To start the adb server process
+
+```adb -P port start-server```
+- To start the adb server process with a specific port
 
 #### Reboot the devices
 
 ```reboot [bootloader | recovery | sideload | sideload-auto-reboot ]```
 
 - Reboot the device. This command defaults to booting the system image, but also supports bootloader and recovery. 
-    - The bootloader option reboots into bootloader.
-    - The recovery option reboots into recovery.
-    - The sideload option reboots into recovery and starts sideload mode.
-    - The sideload-auto-reboot option is the same as sideload, but reboots after side loading completes.
+    - The **bootloader** option reboots into bootloader.
+    - The **recovery** option reboots into recovery.
+    - The **sideload** option reboots into recovery and starts sideload mode.
+    - The **sideload-auto-reboot** option is the same as sideload, but reboots after side loading completes.
 
 ```adb root```
 - Restart adbd with root permissions.
@@ -157,7 +160,7 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
 ```reconnect device```
 - Force a reconnect from the device to force a reconnect.
 
-### Connect over Wifi
+## Connect over Wifi
 1. Connect your Android device and adb host computer to a common Wi-Fi network accessible to both. Beware that not all access points are suitable; you might need to use an access point whose firewall is configured properly to support adb.
 
 2. If you are connecting to an Wear OS device, turn off Bluetooth on the phone that's paired with the device.
@@ -188,10 +191,34 @@ If the adb connection is ever lost:
 
 Then start over from the beginning.
 
-### ADB command reference
-```adb [-d | -e | -s serial_number] command ```
+## ADB shell command
+```adb shell```
+- Start a remote interactive shell in the target device
 
-### Some useful hack
+```adb shell -e escape_char [-n] [-T] [-t] [-x] [command]```
+- Issue a shell command in the target device and then exit the remote shell. Use any combination of the following options:
+    - **-e**: Specify an escape character or the value none if you do not want to use an escape character. If you do not provide a value, the default escape character (a dash (-)), is used.
+    - **-n**: Do not read from stdin.
+    - **-T**: Disable pseudo-terminal utiity (PTY) allocation.
+    - **-t**: Force PTY allocation.
+    - **-x**: Disable remote exit codes and stdout/stderr separation.
+
+The shell command binaries are stored in the file system of the device at ```/system/bin/```
+
+For more information, see Issue shell commands.
+
+## Call activity manager
+
+## Screencapture
+```adb shell screencap file```
+- To take a screenshot. Replace file with a file name such as ```/sdcard/screen.png```
+
+## Screenrecord
+```adb screenrecord [options] filename```
+- Stop the screen recording by pressing Control + C, otherwise the recording stops automatically at three minutes or the time limit set by ```--time-limit```
+
+
+## Some useful hack
 ```adb shell dumpsys window windows | grep "Focus"```
 - To get the current foreground running apps's package id and current activity.
 ```
@@ -203,4 +230,10 @@ mFocusedApp=AppWindowToken{c6b3f53 token=Token{9f9958d ActivityRecord{11d1624 u0
 
 ```adb shell am start -c api.android.intent.LAUNCHER -a api.android.category.MAIN -n package_id/activity_name```
 - To open a app at a specific activity, For example: ```adb shell am start -c api.android.intent.LAUNCHER -a api.android.category.MAIN -n com.google.android.dialer/com.google.android.dialer.extensions.GoogleDialtactsActivity```
+
+```adb shell vm size```
+- To check devices resolution
+
+```adb shell wm density```
+- To check devices dpi
 
