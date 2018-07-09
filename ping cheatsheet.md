@@ -3,7 +3,7 @@
 - In Windows, this command will send 4 ICMP ECHO_REQUEST packages. 
 - But in Linux, it will send packages repeatedly until the user press ```Ctrl + C```
 
-```ping -n 10 
+
 
 ### Use ping and arp to generation a IP-MAC pairs table
 - Linux
