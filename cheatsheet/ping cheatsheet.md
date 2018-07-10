@@ -3,13 +3,13 @@
 - In Windows, this command will send 4 ICMP ECHO_REQUEST packages. 
 - But in Linux, it will send packages repeatedly until the user press ```Ctrl + C```
 
-```ping -n 10 www.aaa.com``` (Windows) \ ```ping -c 10 www.aaa.com``` (Linux and macos)
+```ping -n 10 www.aaa.com```(Windows) \ ```ping -c 10 www.aaa.com```(Linux and macos)
 - Ping www.aaa.com 10 times
 
-```ping -t www.aaa.com``` (Windows)
+```ping -t www.aaa.com```(Windows)
 - Ping repeatedly until ```Ctrl + C```
 
-```ping -4 www.aaa.com``` (Windows)
+```ping -4 www.aaa.com```(Windows)
 - Ping the IPv4 address of the domain name
 
 ```ping -6 www.aaa.com```(Windows)
@@ -21,7 +21,7 @@
 ```ping -l 1200 www.aaa.com```(Windows) \ ```ping -s 1200 www.aaa.com```(Linux and macos)
 - Ping www.aaa.com with 1200 bytes of data
 
-```ping -l 1200 -f www.aaa.com```(Windows) \ ```ping -s 1200 -M www.aaa.com```(Linux) \ ```ping -s 1200 -D www.aaa.com```
+```ping -l 1200 -f www.aaa.com```(Windows) \ ```ping -s 1200 -M www.aaa.com```(Linux) \ ```ping -s 1200 -D www.aaa.com```(macos)
 - Ping www.aaa.com with 1200 bytes of data without fragmentation
 
 ```ping -h```(Windows, Linux and macos)
