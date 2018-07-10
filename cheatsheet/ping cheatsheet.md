@@ -45,6 +45,9 @@
 ```ping -n www.aaa.com```(Linux and macos)
 - Ping www.aaa.com without DNS Reverse solution(find the domain name by IP)
 
+```ping -t 10 www.aaa.com```(Linux and macos)
+- Ping www.aaa.com with ICMP package which the time to live(ttl) is 10.(That mean the max node that the package can travel is 10)
+
 ### Use ping and arp to generation a IP-MAC pairs table
 - Linux
 ```bash
