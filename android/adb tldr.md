@@ -24,20 +24,38 @@ List of devices attached
 FA67TBN01874           device usb:336855040X product:pmeuhl_00401 model:HTC_10 device:htc_pmeuhl transport_id:6
 ```
 * **Serial number**: A string created by adb to uniquely identify the device by its port number. (The string in the begining)
-* If you have muilt devices connected, you can use ``` -s ``` to select which device you want to execute commands on. In general: ```adb -s Serial number command```. For example : if you want to launch a shell on a device with serial number **FA67TBN01874**, then you can type: ```adb -s FA67TBN01874 shell```.
-* other options: ```-d``` : direct an adb command to the only attached USB device , ```-e``` : Direct an adb command to the only running emulator.
+
+Options       | Usage |
+:------------:|:-----------
+**-s**        |to use a specific device with the corresponding serial number
+**-d**        |to use the only usb connecting devices  
+**-e**        |to use the only one emulator 
+
+#### Kill and start adb
+```adb kill-server```
+- To terminate the adb server process
+
+```adb start-server```
+- To start the adb server process
+
+```adb -P port start-server```
+- To start the adb server process with a specific port
+
+
 #### Installation
 ```adb install [Options] path_to_apk```
 - To install a apk to the device
-* options:
-    * **-l**: Install the package with forward lock.
-    * **-r**: Reinstall an existing app, keeping its data.
-    * **-t**: Allow test APKs to be installed.(If the APK is built using a developer   preview SDK (if the targetSdkVersion is a letter instead of a number), you must include the -t option with the install command if you are installing a test APK)
-    * **-i**: Installer_package_name: Specify the installer package name.
-    * **-s**: Install package on the shared mass storage (such as sdcard).
-    * **-f**: Install package on the internal system memory.
-    * **-d**: Allow version code downgrade.
-    * **-g**: Grant all permissions listed in the app manifest.
+
+options   | usage
+:--------:|:-------
+**-l**    |Install the package with forward lock.
+**-r**    |Reinstall an existing app, keeping its data.
+**-t**    |Allow test APKs to be installed.(If the APK is built using a developer preview SDK (if the targetSdkVersion is a letter instead of a number), you must include the -t option with the install command if you are installing a test APK)
+**-i**    |Installer_package_name: Specify the installer package name.
+**-s**    |Install package on the shared mass storage (such as sdcard).
+**-f**    |Install package on the internal system memory.
+**-d**    |Allow version code downgrade.
+**-g**    |Grant all permissions listed in the app manifest.
 
 ```adb install-multiple [Options] path_to_apk1 path_to_apk2```
 - To install multiple APKs.
@@ -109,11 +127,14 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
 
 ```adb backup [-f file] [-apk | -noapk] [-obb | -noobb] [-shared | -noshared] [-all] [-system | [-nosystem] package_names```
 - Write an archive of the device's data to file. If you do not specify a file name, the default file is backup.adb. The package list is optional when you specify the -all and -shared options. The following describes the usages for the other options:
-    - **-apk** | **-noapk**: Back up or do not back up .apk files. The default value is **-noapk**.
-    - **-obb** | **-noobb**: Back up or do not back up .obb files. The default value is **-noobb**.
-    - **-shared** | **-noshared**: Back up or do not back up shared storage. The default value is **-noshared**.
-    - **-all**: Back up all installed apps.
-    - **-system** | **-nosystem**: Include or do not include system apps when backing up all installed apps (**-all**). The default value is **-system**.
+
+Options  | Usage
+:-------:|:----------
+**-apk** **-noapk** |Back up or do not back up .apk files. The default value is **-noapk**.
+**-obb** **-noobb**| Back up or do not back up .obb files. The default value is **-noobb**.
+**-shared** **-noshared**| Back up or do not back up shared storage. The default value is **-noshared**.
+**-all**| Back up all installed apps.
+**-system**  **-nosystem**| Include or do not include system apps when backing up all installed apps (**-all**). The default value is **-system**.
 
 ```adb restore file```
 - Restore the device contents from file.
@@ -127,25 +148,18 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
     - Replace local and remote with the paths to the target files/directory on your development machine (local) and on the device (remote). For example: 
 ```adb push foo.txt /sdcard/foo.txt```
 
-#### Kill and start adb
-```adb kill-server```
-- To terminate the adb server process
-
-```adb start-server```
-- To start the adb server process
-
-```adb -P port start-server```
-- To start the adb server process with a specific port
-
 #### Reboot the devices
 
 ```reboot [bootloader | recovery | sideload | sideload-auto-reboot ]```
 
 - Reboot the device. This command defaults to booting the system image, but also supports bootloader and recovery. 
-    - The **bootloader** option reboots into bootloader.
-    - The **recovery** option reboots into recovery.
-    - The **sideload** option reboots into recovery and starts sideload mode.
-    - The **sideload-auto-reboot** option is the same as sideload, but reboots after side loading completes.
+
+Options | Usage
+:--------:|:-------
+**bootloader** |Reboots into bootloader.
+**recovery** |Reboots into recovery.
+**sideload** |Reboots into recovery and starts sideload mode.
+**sideload-auto-reboot** |It is the same as sideload, but reboots after side loading completes.
 
 ```adb root```
 - Restart adbd with root permissions.
@@ -197,17 +211,112 @@ Then start over from the beginning.
 
 ```adb shell -e escape_char [-n] [-T] [-t] [-x] [command]```
 - Issue a shell command in the target device and then exit the remote shell. Use any combination of the following options:
-    - **-e**: Specify an escape character or the value none if you do not want to use an escape character. If you do not provide a value, the default escape character (a dash (-)), is used.
-    - **-n**: Do not read from stdin.
-    - **-T**: Disable pseudo-terminal utiity (PTY) allocation.
-    - **-t**: Force PTY allocation.
-    - **-x**: Disable remote exit codes and stdout/stderr separation.
+
+Options | Usage
+:------:|:-------
+**-e**  |Specify an escape character or the value none if you do not want to use an escape character. If you do not provide a value, the default escape character (a dash (-)), is used.
+**-n**  |Do not read from stdin.
+**-T**  |Disable pseudo-terminal utiity (PTY) allocation.
+**-t**  |Force PTY allocation.
+**-x**  |Disable remote exit codes and stdout/stderr separation.
 
 The shell command binaries are stored in the file system of the device at ```/system/bin/```
 
 For more information, see Issue shell commands.
 
 ## Call activity manager
+## Call package manager
+```adb shell pm list package [-f] [-d] [-e] [-s] [-3] [-i] [-u] [--user USER_ID [Filter]```
+
+- Prints all packages, optionally only those package name contains the text in filter
+
+Options        | Usage
+:-------------:|:---------
+**-f**             |See their associated file
+**-d**             |Filter to only show disabled packages
+**-e**             |Filter to only show enabled packages.
+**-s**             |Filter to only show system packages.
+**-3**             |Filter to only show third party packages.
+**-i**             | See the installer for the packages.
+**-u**             | Also include uninstalled packages.
+**--user user_id** | The user space to query.
+
+```adb shell pm list packages Google```
+- To find all package names contains "Google"
+
+```adb shell pm list permission-groups```
+- Prints all known permission groups.
+
+```adb shell pm list permissions [options] groups```
+- Prints all known permissions, optionally only those in group.
+
+Options | Usage
+:------:|:------
+**-g**  | Organize by group.
+**-f**  | Print all information.
+**-s**  | Short summary.
+**-d**  | Only list dangerous permissions.
+**-u**  | List only the permissions users will see.
+
+```adb shell pm list features```
+- Prints all features of the system.
+
+```adb shell pm list libraries```
+- Prints all the libraries supported by the current device.
+
+```adb shell pm list users```
+- Prints all users on the system.
+
+```adb shell pm path package``` 
+- Print the path to the APK of the given **package**.
+
+```adb shell pm install [options] path```
+- Installs a package (specified by path) to the system.
+
+Options | Usgae
+:------:|:---------
+**-l**  | Install the package with forward lock.
+**-r**  | Reinstall an existing app, keeping its data.
+**-t**  | Allow test APKs to be installed. Gradle generates a test APK when you have only run or debugged your app or have used the Android Studio Build > Build APK command. If the APK is built using a developer preview SDK (if the targetSdkVersion is a letter instead of a number), you must include the -t option with the install command if you are installing a test APK.
+**-i**  | installer_package_name: Specify the installer package name.
+**-s**  | Install package on the shared mass storage (such as sdcard).
+**-f**  | Install package on the internal system memory.
+**-d**  | Allow version code downgrade.
+**-g**  | Grant all permissions listed in the app manifest.
+
+```adb shell pm uninstall [options] package```
+- Removes a package from the system.
+
+Options|Usaga
+:-------:|:-----
+**-k**   | Keep the data and cache directories around after package removal.
+
+```adb shell pm grant package_name permission```
+- Grant a permission to an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
+
+```adb shell pm revoke package_name permission```
+- Revoke a permission from an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
+
+```adb shell pm set-install-location location_values```
+- Changes the default install location. **Location_values**:
+
+0: Auto: Let system decide the best location.
+
+1: Internal: install on internal device storage.
+
+2: External: on external media.
+
+```adb shell pm get-install-location```
+-Returns the current install location. Return value is same as **Location_values**.
+
+```adb shell pm create-user user_name```
+- Create a new user with the given user_name, printing the new user identifier of the user.
+
+```adb shell pm remove-user user_id```
+- Remove the user with the given user_id, deleting all data associated with that user
+
+```abd shell pm get-max-users```
+- Prints the maximum number of users supported by the device.
 
 ## Screencapture
 ```adb shell screencap file```
