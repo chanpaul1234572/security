@@ -1,5 +1,5 @@
 # ADB TLDR
-### This note is to record some basic and useful adb commands.
+## This note is to record some basic and useful adb commands.
 Android Debug Bridge (adb) is a versatile command-line tool that lets you communicate with a device. The adb command facilitates a variety of device actions, such as installing and debugging apps, and it provides access to a Unix shell that you can use to run a variety of commands on a device. It is a client-server program that includes three components:
 
 **A client**, which sends commands. The client runs on your development machine. You can invoke a client from a command-line terminal by issuing an adb command.(TLDR: The commands sender)
@@ -8,9 +8,9 @@ Android Debug Bridge (adb) is a versatile command-line tool that lets you commun
 
 **A server**, which manages communication between the client and the daemon. The server runs as a background process on your development machine. (TLDR: The middle man on the computer that tranfers the commands to the daemon)
 
-## Basic
+# Basic
 
-#### check connection
+### check connection
 ```adb devices```
 - To show any device(s) is/are currently connected
 ```
@@ -31,7 +31,7 @@ Options       | Usage |
 **-d**        |to use the only usb connecting devices  
 **-e**        |to use the only one emulator 
 
-#### Kill and start adb
+### Kill and start adb
 ```adb kill-server```
 - To terminate the adb server process
 
@@ -42,7 +42,7 @@ Options       | Usage |
 - To start the adb server process with a specific port
 
 
-#### Installation
+### Installation
 ```adb install [Options] path_to_apk```
 - To install a apk to the device
 
@@ -59,18 +59,19 @@ options   | usage
 
 ```adb install-multiple [Options] path_to_apk1 path_to_apk2```
 - To install multiple APKs.
-#### Uninstallation
+### Uninstallation
 ```adb uninstall [Options] package```
 - Removes a package from the system
 * Options:
     * **-k** : Keep the data and cache directories around after package removal.
 
 * Reminder: The package name id can be found in google play website using a web browser, the package name will be listed at the end of the URL after the **?id=** . For example: searching for **busybox** apps, the **url** is ```https://play.google.com/store/apps/details?id=stericson.busybox```, so the package name is **stericson.busybox**. Actually, there is a more **easy** way to find the package name, and I will disscue later.
-#### Socket connection forwarding/reversing
+## Socket connection forwarding/reversing
 * To map an android device port to a computer port is called forwarding
 * To map a computer port ot an android device port is called reversing
-```adb [--no-rebind] Local remote``` 
-- To set up a forward socket connection, replace local and remote with tcp:(port), For example: 
+
+```adb forward [--no-rebind] Local remote``` 
+- To set up a forward socket connection, replace local and remote with ```tcp:(port)```, For example: 
 
 - ```adb forward tcp:port_number_of_the_host tcp:port_number_of_the_device```
     - To set up forwarding of host **port port_number_of_the_host** tcp to device port **port_number_of_the_device** . 
@@ -97,7 +98,7 @@ options   | usage
 ```adb reverse --remove-all```
 - To remove all reversing
 
-#### To run as package owner
+## To run as package owner
 ```run-as package_name```
 - Run commands on a device as an app (specified using package_name).
 - For example: To read a package data:
@@ -123,7 +124,7 @@ adb shell run-as <PACKAGE_NAME> cat <FILE>
     - /data/data/com.packagename/lib can access without run-as
     - "android:debuggable="false"" will ignore **run-as**
 
-#### Backup and restore
+## Backup and restore
 
 ```adb backup [-f file] [-apk | -noapk] [-obb | -noobb] [-shared | -noshared] [-all] [-system | [-nosystem] package_names```
 - Write an archive of the device's data to file. If you do not specify a file name, the default file is backup.adb. The package list is optional when you specify the -all and -shared options. The following describes the usages for the other options:
@@ -139,7 +140,7 @@ Options  | Usage
 ```adb restore file```
 - Restore the device contents from file.
 
-#### To copy something from device/host to device/host
+## To copy something from device/host to device/host
 ```adb pull remote local```
 - To copy a file or directory and its sub-directories from the device
 
@@ -148,7 +149,7 @@ Options  | Usage
     - Replace local and remote with the paths to the target files/directory on your development machine (local) and on the device (remote). For example: 
 ```adb push foo.txt /sdcard/foo.txt```
 
-#### Reboot the devices
+## Reboot the devices
 
 ```reboot [bootloader | recovery | sideload | sideload-auto-reboot ]```
 
@@ -167,14 +168,14 @@ Options | Usage
 ```adb unroot```
 - Restart adbd without root permissions.
 
-#### Reconnection
+## Reconnection
 ```adb reconnect```
 - Force a reconnect from the host.
 
 ```reconnect device```
 - Force a reconnect from the device to force a reconnect.
 
-## Connect over Wifi
+# Connect over Wifi
 1. Connect your Android device and adb host computer to a common Wi-Fi network accessible to both. Beware that not all access points are suitable; you might need to use an access point whose firewall is configured properly to support adb.
 
 2. If you are connecting to an Wear OS device, turn off Bluetooth on the phone that's paired with the device.
@@ -205,7 +206,7 @@ If the adb connection is ever lost:
 
 Then start over from the beginning.
 
-## ADB shell command
+# ADB shell command
 ```adb shell```
 - Start a remote interactive shell in the target device
 
@@ -224,18 +225,72 @@ The shell command binaries are stored in the file system of the device at ```/sy
 
 For more information, see Issue shell commands.
 
-## Call activity manager
-### Basic format
+# Call activity manager
+## Basic format
 
-```adb shell am command``` or ```am command``` after get into ```adb shell```
+```adb shell am command``` or ```am command``` after enter the remote shell```adb shell```
 
+### Common Commands 
 
-## Call package manager
-### Basic format
+```adb shell am start [options]```  
+- start a specific Activity
 
-```adb shell pm command``` or ```pm command``` after get into ```adb shell```
+Options | Usage
+:------:|:-------
+**-D**  |Enable debugging.
+**-W**  | Wait for launch to complete.
+**--start-profiler file** | Start profiler and send results to file.
+**-P file** | Like --start-profiler, but profiling stops when the app goes idle.
+**-R count** | Repeat the activity launch count times. Prior to each repeat, the top activity will be finished.
+**-S** | Force stop the target app before starting the activity.
+**--opengl-trace** | Enable tracing of OpenGL functions.
+**--user user_id \| current** | Specify which user to run as; if not specified, then run as the current user.
 
-### Listing
+Example: ```adb shell am start -n com.tencent.mm/.ui.LauncherUI```
+- To launch WeChat main UI
+
+```adb shell am startservice [options]```  
+- start a specific Service
+
+Options | Usage
+:------:|:------
+**--user user_id \| current** |  Specify which user to run as; if not specified, then run as the current user.
+
+```adb shell am kill [options] package```
+- Kill all processes associated with package (the app's package name). This command kills only processes that are safe to kill and that will not impact the user experience.
+
+Options | Usage
+:------:|:------
+** --user user_id \| all \| current** | Specify which user to send to; if not specified then send to all users.
+
+```adb shell am kill-all```
+- Kill all background processes.
+
+```adb shell am broadcast [options]```
+- send a specific broadcast(Issue a broadcast intent.)
+
+Options | Usage
+:------:|:------
+** \[--user user_id \| all \| current\]** | Specify which user to send to; if not specified then send to all users.
+
+```adb shell am force-stop```  
+- Force stop everything associated with package (the app's package name).
+
+Specification for intent arguments:
+- For activity manager commands that take an intent argument, you can specify the intent with the following options:
+
+Options | Usage
+:------:|:------
+**-a action** | Specify the intent action, such as android.intent.action.VIEW. You can declare this only once.
+**-c category** | Specify an intent category, such as android.intent.category.APP_CONTACTS.
+**-n component** | Specify the component name with package name prefix to create an explicit intent, such as com.example.app/.ExampleActivity.
+
+# Call package manager
+## Basic format
+
+```adb shell pm command``` or ```pm command``` after enter the remote shell ```adb shell```
+
+## Listing
 ```adb shell pm list package [-f] [-d] [-e] [-s] [-3] [-i] [-u] [--user USER_ID [Filter]```
 
 - Prints all packages, optionally only those package name contains the text in filter
@@ -280,7 +335,7 @@ Options | Usage
 ```adb shell pm path package``` 
 - Print the path to the APK of the given **package**.
 
-### Installation and Uninstallation
+## Installation and Uninstallation
 
 ```adb shell pm install [options] path```
 - Installs a package (specified by path) to the system.
@@ -306,7 +361,7 @@ Options|Usaga
 ```adb shell pm clear package```
 - Deletes all data(include cache) associated with a package.
 
-### Granting and Revoking Permission 
+## Granting and Revoking Permission 
 
 ```adb shell pm grant package_name permission```
 - Grant a permission to an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
@@ -314,7 +369,7 @@ Options|Usaga
 ```adb shell pm revoke package_name permission```
 - Revoke a permission from an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
 
-### Install location
+## Install location
 ```adb shell pm set-install-location location_values```
 - Changes the default install location. **Location_values**:
 
@@ -327,7 +382,7 @@ Options|Usaga
 ```adb shell pm get-install-location```
 -Returns the current install location. Return value is same as **Location_values**.
 
-### Creating and Removing User
+## Creating and Removing User
 ```adb shell pm create-user user_name```
 - Create a new user with the given user_name, printing the new user identifier of the user.
 
@@ -337,16 +392,110 @@ Options|Usaga
 ```abd shell pm get-max-users```
 - Prints the maximum number of users supported by the device.
 
-## Screencapture
+# Simulate touch and input
+## Basic 
+```adb shell input [] [...]```
+```
+Usage: input []  [...]
+
+The sources are:
+      mouse
+      keyboard
+      joystick
+      touchnavigation
+      touchpad
+      trackball
+      stylus
+      dpad
+      gesture
+      touchscreen
+      gamepad
+
+The commands and default sources are:
+      text  (Default: touchscreen)
+      keyevent [--longpress]  ... (Default: keyboard)
+      tap   (Default: touchscreen)
+      swipe     [duration(ms)] (Default: touchscreen)
+      press (Default: trackball)
+      roll   (Default: trackball)
+```
+
+```adb shell input keyevent keycode```
+
+keycode | meaning
+:------:|:-------
+3|HOME button
+4|BACK button
+5|Dialer ap
+6|hang up the phone
+24|volumn up
+25|volumn down 
+26|Power button
+27|take a photo
+64|Open the Browser
+82|Menu buttin
+224|screen on
+223|screen off
+- There are Too Many keycode, so plz Google **keyevent keycode** yourself
+
+```adb shell input text hello```
+- input a text
+
+# Screencapture
 ```adb shell screencap file```
 - To take a screenshot. Replace file with a file name such as ```/sdcard/screen.png```
 
-## Screenrecord
+# Screenrecord
 ```adb screenrecord [options] filename```
 - Stop the screen recording by pressing Control + C, otherwise the recording stops automatically at three minutes or the time limit set by ```--time-limit```
 
+# Logs
 
-## Some useful hack
+```adb shell dmesg```
+- Get kernel log
+```adb logcat [<option>] ... [<filter-spec>]```
+
+character | Priority 
+:--------:|:--------
+**V** | Verbose (lowest priority)
+**D** | Debug
+**I** | Info
+**W** | Warning
+**E** | Error
+**F** | Fatal
+**S**     | Silent (highest priority, on which nothing is ever printed)
+
+```adb logcat *:W```
+- displays all log messages with priority level "warning" and higher, on all tags:
+
+# Device's information
+
+```adb shell getprop ro.product.model```
+- Get device model
+
+```adb shell dumpsys battery```
+- Get battery status
+
+```adb shell settings get secure android_id```
+- Get android_id
+
+```
+adb shell
+su
+service call iphonesubinfo 1
+```
+- Get IMEI
+
+```adb shell getprop ro.build.version.release```
+- Get android version
+
+```adb shell cat /sys/class/net/wlan0/address```
+- Get Mac Address
+
+```adb shell cat /proc/cpuinfo```
+-Get CPU information
+
+# Some useful hack
 ```adb shell dumpsys window windows | grep "Focus"```
 - To get the current foreground running apps's package id and current activity.
 ```
@@ -365,3 +514,71 @@ mFocusedApp=AppWindowToken{c6b3f53 token=Token{9f9958d ActivityRecord{11d1624 u0
 ```adb shell wm density```
 - To check devices dpi
 
+## To remount the /system to become writable
+1. Enter the shell with root permission 
+```
+adb shell
+su
+```
+2. Check partition mount situation
+```
+mount
+```
+
+Output:
+```
+rootfs / rootfs ro,relatime 0 0
+tmpfs /dev tmpfs rw,seclabel,nosuid,relatime,mode=755 0 0
+devpts /dev/pts devpts rw,seclabel,relatime,mode=600 0 0
+proc /proc proc rw,relatime 0 0
+sysfs /sys sysfs rw,seclabel,relatime 0 0
+selinuxfs /sys/fs/selinux selinuxfs rw,relatime 0 0
+debugfs /sys/kernel/debug debugfs rw,relatime 0 0
+none /var tmpfs rw,seclabel,relatime,mode=770,gid=1000 0 0
+none /acct cgroup rw,relatime,cpuacct 0 0
+none /sys/fs/cgroup tmpfs rw,seclabel,relatime,mode=750,gid=1000 0 0
+none /sys/fs/cgroup/memory cgroup rw,relatime,memory 0 0
+tmpfs /mnt/asec tmpfs rw,seclabel,relatime,mode=755,gid=1000 0 0
+tmpfs /mnt/obb tmpfs rw,seclabel,relatime,mode=755,gid=1000 0 0
+none /dev/memcg cgroup rw,relatime,memory 0 0
+none /dev/cpuctl cgroup rw,relatime,cpu 0 0
+none /sys/fs/cgroup tmpfs rw,seclabel,relatime,mode=750,gid=1000 0 0
+none /sys/fs/cgroup/memory cgroup rw,relatime,memory 0 0
+none /sys/fs/cgroup/freezer cgroup rw,relatime,freezer 0 0
+/dev/block/platform/msm_sdcc.1/by-name/system /system ext4 ro,seclabel,relatime,data=ordered 0 0
+/dev/block/platform/msm_sdcc.1/by-name/userdata /data ext4 rw,seclabel,nosuid,nodev,relatime,noauto_da_alloc,data=ordered 0 0
+/dev/block/platform/msm_sdcc.1/by-name/cache /cache ext4 rw,seclabel,nosuid,nodev,relatime,data=ordered 0 0
+/dev/block/platform/msm_sdcc.1/by-name/persist /persist ext4 rw,seclabel,nosuid,nodev,relatime,data=ordered 0 0
+/dev/block/platform/msm_sdcc.1/by-name/modem /firmware vfat ro,context=u:object_r:firmware_file:s0,relatime,uid=1000,gid=1000,fmask=0337,dmask=0227,codepage=cp437,iocharset=iso8859-1,shortname=lower,errors=remount-ro 0 0
+/dev/fuse /mnt/shell/emulated fuse rw,nosuid,nodev,relatime,user_id=1023,group_id=1023,default_permissions,allow_other 0 0
+/dev/fuse /mnt/shell/emulated/0 fuse rw,nosuid,nodev,relatime,user_id=1023,group_id=1023,default_permissions,allow_other 0 0
+```
+
+3. Find the /system
+```
+/dev/block/platform/msm_sdcc.1/by-name/system /system ext4 ro,seclabel,relatime,data=ordered 0 0
+```
+
+4. Remount 
+```
+mount -o remount,rw -t yaffs2 /dev/block/platform/msm_sdcc.1/by-name/system /system
+```
+
+## Get Saved Wifi Password
+
+```
+adb shell
+su
+cat /data/misc/wifi/*.conf
+```
+
+## Set date and time
+```
+adb shell
+su
+date -s 20160823.131500
+```
+
+## Use Monkey to conduct a pressure test
+```adb shell monkey -p  -v 500```
+- Generate 500 pesudorandom events
