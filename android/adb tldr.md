@@ -225,7 +225,17 @@ The shell command binaries are stored in the file system of the device at ```/sy
 For more information, see Issue shell commands.
 
 ## Call activity manager
+### Basic format
+
+```adb shell am command``` or ```am command``` after get into ```adb shell```
+
+
 ## Call package manager
+### Basic format
+
+```adb shell pm command``` or ```pm command``` after get into ```adb shell```
+
+### Listing
 ```adb shell pm list package [-f] [-d] [-e] [-s] [-3] [-i] [-u] [--user USER_ID [Filter]```
 
 - Prints all packages, optionally only those package name contains the text in filter
@@ -270,6 +280,8 @@ Options | Usage
 ```adb shell pm path package``` 
 - Print the path to the APK of the given **package**.
 
+### Installation and Uninstallation
+
 ```adb shell pm install [options] path```
 - Installs a package (specified by path) to the system.
 
@@ -291,12 +303,18 @@ Options|Usaga
 :-------:|:-----
 **-k**   | Keep the data and cache directories around after package removal.
 
+```adb shell pm clear package```
+- Deletes all data(include cache) associated with a package.
+
+### Granting and Revoking Permission 
+
 ```adb shell pm grant package_name permission```
 - Grant a permission to an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
 
 ```adb shell pm revoke package_name permission```
 - Revoke a permission from an app. On devices running Android 6.0 (API level 23) and higher, the permission can be any permission declared in the app manifest. On devices running Android 5.1 (API level 22) and lower, must be an optional permission defined by the app.
 
+### Install location
 ```adb shell pm set-install-location location_values```
 - Changes the default install location. **Location_values**:
 
@@ -309,6 +327,7 @@ Options|Usaga
 ```adb shell pm get-install-location```
 -Returns the current install location. Return value is same as **Location_values**.
 
+### Creating and Removing User
 ```adb shell pm create-user user_name```
 - Create a new user with the given user_name, printing the new user identifier of the user.
 
